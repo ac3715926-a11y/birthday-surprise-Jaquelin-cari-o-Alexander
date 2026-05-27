@@ -1,0 +1,834 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>🌹 Sorpresa para Jaqueline ✨</title>
+
+  <meta name="description" content="Una sorpresa elegante de cumpleaños para Jaqueline con cuenta regresiva y fondo de rosas." />
+  <meta property="og:title" content="🌹 Sorpresa para Jaqueline ✨" />
+  <meta property="og:description" content="La sorpresa se abrirá el viernes a las 7:00 AM." />
+  <meta property="og:type" content="website" />
+  <meta property="og:image" content="img/rosas-bg.jpg" />
+
+  <style>
+    :root {
+      --rosa1: #ff71ad;
+      --rosa2: #ffb7d4;
+      --rosa3: #e34f8d;
+      --vino: #7d1d49;
+      --dorado: #f3d27b;
+      --crema: #fff7fb;
+      --blanco: #ffffff;
+      --glass-strong: rgba(66, 8, 35, 0.86);
+      --glass-soft: rgba(98, 18, 57, 0.76);
+      --border-soft: rgba(255,255,255,0.18);
+    }
+
+    * { box-sizing: border-box; }
+
+    html, body {
+      margin: 0;
+      padding: 0;
+      min-height: 100%;
+      font-family: 'Segoe UI', Arial, sans-serif;
+      color: white;
+      background: linear-gradient(135deg, #ff8dbc, #cf487e, #631536);
+      overflow-x: hidden;
+    }
+
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      background:
+        radial-gradient(circle at 15% 20%, rgba(255,255,255,0.14), transparent 24%),
+        radial-gradient(circle at 88% 18%, rgba(255,255,255,0.10), transparent 22%),
+        radial-gradient(circle at 60% 80%, rgba(255,255,255,0.07), transparent 24%);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .gate {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      background:
+        linear-gradient(rgba(75, 5, 32, 0.56), rgba(75, 5, 32, 0.76)),
+        url('img/rosas-bg.jpg') no-repeat center center / cover;
+      z-index: 5;
+      padding: 20px;
+    }
+
+    .gate-card {
+      width: min(94vw, 860px);
+      padding: 34px 28px;
+      background: var(--glass-strong);
+      border: 1px solid var(--border-soft);
+      border-radius: 28px;
+      box-shadow: 0 0 40px rgba(255, 95, 162, 0.22);
+      text-align: center;
+      backdrop-filter: blur(9px);
+    }
+
+    .gate-flower {
+      font-size: clamp(44px, 8vw, 78px);
+      animation: pulse 2.4s infinite;
+      text-shadow: 0 0 18px rgba(255,255,255,0.8);
+      user-select: none;
+    }
+
+    .gate-title {
+      margin: 12px 0 8px;
+      font-size: clamp(30px, 6vw, 58px);
+      color: var(--crema);
+      text-shadow: 0 0 15px #ff70ac;
+      font-weight: 900;
+      letter-spacing: 1px;
+    }
+
+    .gate-sub {
+      margin: 0 auto 16px;
+      max-width: 700px;
+      line-height: 1.65;
+      font-size: 1.05rem;
+      color: #fff6fb;
+      opacity: 0.96;
+    }
+
+    .target-date {
+      display: inline-block;
+      margin: 8px 0 22px;
+      padding: 11px 18px;
+      border-radius: 999px;
+      background: rgba(255,255,255,0.1);
+      border: 1px solid rgba(255,255,255,0.18);
+      color: var(--dorado);
+      font-weight: 800;
+      box-shadow: 0 0 16px rgba(255, 215, 107, 0.12);
+    }
+
+    .count-grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 12px;
+      margin: 10px 0 18px;
+    }
+
+    .count-box {
+      background: rgba(255,255,255,0.08);
+      border: 1px solid rgba(255,255,255,0.14);
+      border-radius: 18px;
+      padding: 16px 10px;
+      box-shadow: inset 0 0 14px rgba(255,255,255,0.05);
+    }
+
+    .count-num {
+      font-size: clamp(28px, 6vw, 54px);
+      font-weight: 900;
+      color: var(--crema);
+      text-shadow: 0 0 12px rgba(255,255,255,0.22);
+      line-height: 1;
+    }
+
+    .count-label { margin-top: 8px; font-size: 0.95rem; color: #ffdfe9; opacity: 0.95; }
+    .gate-note { margin-top: 12px; color: #ffe8f2; opacity: 0.9; font-size: 0.96rem; }
+    .open-now { display: none; margin-top: 22px; }
+
+    .open-btn {
+      border: none;
+      border-radius: 999px;
+      padding: 14px 24px;
+      background: linear-gradient(135deg, #ff5fa2, #ffd76b);
+      color: #4d1230;
+      font-weight: 900;
+      font-size: 1rem;
+      cursor: pointer;
+      box-shadow: 0 0 24px rgba(255, 95, 162, 0.35);
+    }
+
+    .hidden-until-open { display: none; }
+
+    .flash {
+      position: fixed;
+      inset: 0;
+      background: white;
+      opacity: 0;
+      pointer-events: none;
+      z-index: 4000;
+    }
+
+    .special-overlay {
+      position: fixed;
+      inset: 0;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      background: radial-gradient(circle, rgba(255,255,255,0.14), rgba(101,16,54,0.62));
+      backdrop-filter: blur(4px);
+      z-index: 3700;
+      text-align: center;
+      padding: 20px;
+      pointer-events: none;
+    }
+
+    .special-title {
+      font-size: clamp(32px, 7vw, 72px);
+      font-weight: 900;
+      color: var(--crema);
+      text-shadow:
+        0 0 12px rgba(255,255,255,0.95),
+        0 0 28px rgba(255,215,123,0.95),
+        0 0 46px rgba(255,95,162,0.85);
+      opacity: 0;
+      transform: scale(0.8);
+    }
+
+    .special-sub {
+      margin-top: 10px;
+      font-size: clamp(16px, 3vw, 24px);
+      color: #fffafc;
+      opacity: 0;
+    }
+
+    .countdown-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(88, 13, 50, 0.72);
+      backdrop-filter: blur(4px);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      z-index: 3500;
+      text-align: center;
+      padding: 20px;
+    }
+
+    .countdown-number {
+      font-size: clamp(80px, 20vw, 180px);
+      font-weight: 900;
+      color: var(--crema);
+      text-shadow: 0 0 16px rgba(255,255,255,0.9), 0 0 36px rgba(255,95,162,0.85), 0 0 68px rgba(139,30,79,0.85);
+      transform: scale(0.7);
+      opacity: 0;
+    }
+
+    .countdown-text { margin-top: 14px; font-size: clamp(18px, 3vw, 28px); color: white; text-shadow: 0 0 10px rgba(255,255,255,0.3); }
+
+    .intro {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      text-align: center;
+      background: linear-gradient(rgba(72, 8, 33, 0.35), rgba(72, 8, 33, 0.52)), url('img/rosas-bg.jpg') no-repeat center center / cover;
+      transition: opacity 1s ease;
+      z-index: 1;
+    }
+
+    .floral-icon {
+      position: absolute;
+      top: 18px;
+      left: 50%;
+      transform: translateX(-50%);
+      font-size: 60px;
+      animation: pulse 2.3s infinite;
+      text-shadow: 0 0 18px rgba(255,255,255,0.8);
+      user-select: none;
+    }
+
+    .music-btn {
+      position: fixed;
+      top: 16px;
+      right: 16px;
+      z-index: 3000;
+      border: none;
+      border-radius: 999px;
+      padding: 12px 16px;
+      font-size: 15px;
+      font-weight: bold;
+      background: rgba(95, 13, 51, 0.72);
+      color: white;
+      border: 1px solid rgba(255,255,255,0.18);
+      cursor: pointer;
+      backdrop-filter: blur(6px);
+      box-shadow: 0 0 15px rgba(255,255,255,0.10);
+    }
+
+    .music-btn:hover { transform: scale(1.04); }
+
+    .card-container {
+      padding: 34px 30px;
+      border-radius: 28px;
+      background: rgba(102, 13, 53, 0.3);
+      backdrop-filter: blur(7px);
+      box-shadow: 0 0 34px rgba(255, 120, 180, 0.25);
+      cursor: pointer;
+      max-width: 92%;
+      border: 1px solid rgba(255,255,255,0.18);
+    }
+
+    .jaqui-name {
+      font-size: clamp(44px, 8vw, 96px);
+      font-weight: 900;
+      letter-spacing: 4px;
+      color: var(--crema);
+      margin-bottom: 8px;
+      text-shadow: 0 0 8px rgba(255,255,255,0.95), 0 0 18px rgba(255,215,107,0.95), 0 0 34px rgba(255,95,162,0.85), 0 0 56px rgba(139,30,79,0.82);
+      animation: nameGlow 1.8s ease-in-out infinite alternate, nameFloat 3s ease-in-out infinite;
+    }
+
+    .cake {
+      font-size: clamp(110px, 16vw, 170px);
+      transition: all 0.5s ease;
+      animation: floatCake 2.8s ease-in-out infinite;
+      user-select: none;
+      filter: drop-shadow(0 0 12px rgba(255,255,255,0.25));
+    }
+
+    .intro-title { margin: 8px 0 10px; font-size: clamp(28px, 5vw, 50px); color: var(--dorado); text-shadow: 0 0 14px rgba(255, 215, 107, 0.9); font-weight: 800; }
+    .intro-text { margin-top: 18px; font-size: clamp(18px, 2.5vw, 25px); text-shadow: 0 0 10px rgba(255,255,255,0.5); color: var(--blanco); }
+    .intro-sub { margin-top: 12px; font-size: 15px; opacity: 0.95; color: #fff5fa; }
+
+    .content {
+      display: none;
+      opacity: 0;
+      transform: translateY(30px) scale(0.98);
+      transition: opacity 1s ease, transform 1s ease;
+      max-width: 900px;
+      margin: 40px auto 70px;
+      background: var(--glass-soft);
+      border: 1px solid rgba(255,255,255,0.18);
+      border-radius: 28px;
+      padding: 42px 36px;
+      box-shadow: 0 0 40px rgba(255, 110, 170, 0.30);
+      position: relative;
+      z-index: 2;
+      overflow: hidden;
+    }
+
+    .content::before {
+      content: "🌹";
+      position: absolute;
+      top: -18px;
+      right: 16px;
+      font-size: 40px;
+      opacity: 0.95;
+      transform: rotate(12deg);
+    }
+
+    .content::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(180deg, rgba(255,255,255,0.03), transparent 26%);
+      pointer-events: none;
+    }
+
+    .eyebrow { text-align: center; color: var(--dorado); font-weight: 700; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 12px; opacity: 0.95; }
+    h1 { color: var(--crema); text-align: center; text-shadow: 0 0 18px #ff70ac; margin: 0 0 26px; line-height: 1.1; font-size: clamp(34px, 6vw, 66px); font-weight: 900; letter-spacing: 1.6px; text-transform: uppercase; }
+    .headline-strong { display: inline-block; font-weight: 900; letter-spacing: 2px; }
+    .lead { text-align: center; max-width: 760px; margin: 0 auto 28px; font-size: 1.1rem; line-height: 1.8; color: #fff4fa; }
+    .message-grid { display: grid; grid-template-columns: 1.2fr 0.8fr; gap: 18px; align-items: stretch; }
+    .panel { background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.14); border-radius: 22px; padding: 24px; box-shadow: inset 0 0 15px rgba(255,255,255,0.04); }
+    .panel-title { font-size: 1.05rem; font-weight: 800; color: var(--dorado); margin-bottom: 10px; letter-spacing: 0.6px; }
+    p { line-height: 1.74; font-size: 1.03rem; }
+    .wish-list { margin: 0; padding-left: 20px; }
+    .wish-list li { margin: 11px 0; line-height: 1.55; }
+
+    .closing {
+      margin-top: 24px;
+      padding: 24px;
+      border-radius: 22px;
+      background: linear-gradient(135deg, rgba(243,210,123,0.12), rgba(255,255,255,0.08));
+      border: 1px solid rgba(243,210,123,0.18);
+      text-align: center;
+    }
+
+    .closing strong { font-size: 1.08rem; color: var(--crema); }
+    .firmita { text-align: center; margin-top: 26px; font-size: 1.05rem; opacity: 0.96; }
+    .signature { margin-top: 6px; display: block; font-size: 1.16rem; font-weight: 800; color: var(--dorado); letter-spacing: 1px; }
+
+    .actions { margin-top: 30px; display: flex; flex-wrap: wrap; gap: 12px; justify-content: center; }
+    .btn { border: none; border-radius: 999px; padding: 12px 18px; font-weight: bold; cursor: pointer; transition: transform 0.2s ease, box-shadow 0.2s ease; font-size: 15px; }
+    .btn:hover { transform: translateY(-2px) scale(1.03); }
+    .btn-primary { background: #ff5fa2; color: white; box-shadow: 0 0 18px rgba(255,95,162,0.45); }
+    .btn-secondary { background: #8b1e4f; color: white; box-shadow: 0 0 18px rgba(139,30,79,0.45); }
+    .btn-gold { background: var(--dorado); color: #3d1425; box-shadow: 0 0 18px rgba(255,215,107,0.35); }
+    .footer-note { text-align: center; margin-top: 20px; font-size: 0.92rem; opacity: 0.85; }
+    .small-note { text-align: center; margin-top: 10px; font-size: 0.85rem; opacity: 0.75; }
+
+    @keyframes pulse {
+      0% { transform: translateX(-50%) scale(1); text-shadow: 0 0 10px #fff; }
+      50% { transform: translateX(-50%) scale(1.14); text-shadow: 0 0 25px #fff; }
+      100% { transform: translateX(-50%) scale(1); text-shadow: 0 0 10px #fff; }
+    }
+
+    @keyframes nameGlow {
+      0% { transform: scale(1); text-shadow: 0 0 8px rgba(255,255,255,0.95), 0 0 18px rgba(255,215,107,0.95), 0 0 34px rgba(255,95,162,0.85), 0 0 56px rgba(139,30,79,0.82); }
+      100% { transform: scale(1.04); text-shadow: 0 0 12px rgba(255,255,255,1), 0 0 28px rgba(255,215,107,1), 0 0 46px rgba(255,95,162,0.95), 0 0 72px rgba(139,30,79,0.88); }
+    }
+
+    @keyframes nameFloat { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-6px); } }
+    @keyframes floatCake { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
+    @keyframes countdownPop { 0% { opacity: 0; transform: scale(0.4); } 20% { opacity: 1; transform: scale(1.15); } 45% { opacity: 1; transform: scale(1); } 100% { opacity: 0; transform: scale(1.6); } }
+    @keyframes titleReveal { 0% { opacity: 0; transform: scale(0.8); } 100% { opacity: 1; transform: scale(1); } }
+    @keyframes subReveal { 0% { opacity: 0; transform: translateY(8px); } 100% { opacity: 1; transform: translateY(0); } }
+
+    @media (max-width: 860px) {
+      .message-grid { grid-template-columns: 1fr; }
+    }
+
+    @media (max-width: 768px) {
+      .count-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .content { margin: 20px 14px 60px; padding: 26px 20px; }
+      .music-btn { top: 12px; right: 12px; padding: 10px 13px; font-size: 14px; }
+      .card-container, .gate-card { padding: 22px 18px; }
+    }
+  </style>
+</head>
+<body>
+  <section class="gate" id="gate">
+    <div class="gate-card">
+      <div class="gate-flower">🌹</div>
+      <div class="gate-title">La sorpresa abre el viernes a las 7:00 AM</div>
+      <p class="gate-sub">
+        Esta sorpresa especial para <strong>Jaqueline</strong> está preparada para abrirse el viernes por la mañana.
+        Mientras tanto, aquí tienes la cuenta regresiva para ese momento tan bonito ✨
+      </p>
+      <div class="target-date" id="targetDateLabel">Se abre el viernes a las 7:00 AM</div>
+
+      <div class="count-grid">
+        <div class="count-box"><div class="count-num" id="days">00</div><div class="count-label">días</div></div>
+        <div class="count-box"><div class="count-num" id="hours">00</div><div class="count-label">horas</div></div>
+        <div class="count-box"><div class="count-num" id="minutes">00</div><div class="count-label">minutos</div></div>
+        <div class="count-box"><div class="count-num" id="seconds">00</div><div class="count-label">segundos</div></div>
+      </div>
+
+      <div class="gate-note" id="gateNote">
+        En cuanto llegue la hora, el botón para abrir la sorpresa aparecerá aquí automáticamente 💖
+      </div>
+
+      <div class="open-now" id="openNow">
+        <button class="open-btn" onclick="openSurprise()">💖 Abrir sorpresa</button>
+      </div>
+    </div>
+  </section>
+
+  <div class="hidden-until-open" id="mainExperience">
+    <div class="flash" id="flash"></div>
+    <div class="special-overlay" id="specialOverlay">
+      <div class="special-title" id="specialTitle">🌹 PARA TI, JAQUELINE ✨</div>
+      <div class="special-sub" id="specialSub">Que este momento se vea tan hermoso como mereces 💖</div>
+    </div>
+
+    <div class="countdown-overlay" id="countdownOverlay">
+      <div class="countdown-number" id="countdownNumber">3</div>
+      <div class="countdown-text">Prepárate, Jaqueline… 🌹</div>
+    </div>
+
+    <audio id="boomSound" src="audio/boom.wav" preload="auto"></audio>
+    <audio id="bgMusic" src="audio/fondo.wav" loop preload="auto"></audio>
+
+    <button class="music-btn" id="musicBtn">🎵 Activar música</button>
+
+    <section class="intro" id="intro">
+      <div class="floral-icon">🌹</div>
+
+      <div class="card-container">
+        <div class="jaqui-name">JAQUELINE</div>
+        <div class="intro-title">Una sorpresa creada para un día muy especial</div>
+        <div class="cake" id="cake">🎂</div>
+        <p class="intro-text">Toca el pastel y descubre una carta de cumpleaños elegante y bonita ✨</p>
+        <p class="intro-sub">Rosas, brillo, detalle y una presentación profesional</p>
+      </div>
+    </section>
+
+    <main class="content" id="content">
+      <div class="eyebrow">Una celebración especial</div>
+      <h1><span class="headline-strong">FELIZ CUMPLEAÑOS JAQUELINE</span></h1>
+
+      <p class="lead">
+        Hoy es la ocasión perfecta para celebrar lo valiosa, especial y maravillosa que eres.
+        Que este nuevo año de vida llegue rodeado de momentos hermosos, oportunidades brillantes,
+        sonrisas sinceras y recuerdos que permanezcan siempre en tu corazón.
+      </p>
+
+      <div class="message-grid">
+        <section class="panel">
+          <div class="panel-title">Un mensaje para ti</div>
+          <p>
+            En un día tan importante como este, deseo que cada instante te recuerde lo bonita que es tu esencia.
+            Que la vida te siga regalando motivos para sentirte orgullosa de quien eres, para avanzar con ilusión
+            y para disfrutar cada meta, cada logro y cada detalle que haga sonreír tu corazón.
+          </p>
+          <p>
+            Que este cumpleaños marque el inicio de una etapa llena de alegría, tranquilidad, experiencias inolvidables
+            y mucha luz. Mereces días hermosos, personas genuinas y momentos que hagan florecer aún más todo lo bonito que llevas dentro.
+          </p>
+        </section>
+
+        <section class="panel">
+          <div class="panel-title">Mis mejores deseos para este nuevo año</div>
+          <ul class="wish-list">
+            <li>🌹 Mucha felicidad en cada etapa que vivas.</li>
+            <li>✨ Sueños cumplidos y metas alcanzadas con éxito.</li>
+            <li>💐 Paz, equilibrio y momentos que te llenen el alma.</li>
+            <li>🎀 Experiencias bonitas que se conviertan en recuerdos inolvidables.</li>
+            <li>🌟 Personas sinceras que sumen alegría, apoyo y cariño a tu vida.</li>
+            <li>💖 Días llenos de luz, ternura, sonrisas y motivos para celebrar.</li>
+          </ul>
+        </section>
+      </div>
+
+      <div class="closing">
+        <strong>
+          Que tu vida siga floreciendo con la misma elegancia, dulzura y belleza que hacen tan especial tu presencia.
+          Disfruta muchísimo tu día y guarda este cumpleaños como uno de esos recuerdos que siempre se atesoran.
+        </strong>
+      </div>
+
+      <p class="firmita">
+        Con un detalle pensado especialmente para ti
+        <span class="signature">Alexander</span>
+      </p>
+
+      <div class="actions">
+        <button class="btn btn-primary" onclick="shareWhatsApp()">📲 Compartir por WhatsApp</button>
+        <button class="btn btn-secondary" onclick="replayExperience()">🔁 Volver a ver</button>
+        <button class="btn btn-gold" onclick="toggleMusic()">🎵 Música On/Off</button>
+      </div>
+
+      <p class="footer-note">Diseñado con un estilo elegante, floral y profesional. 🌹✨</p>
+      <p class="small-note">Puedes subir esta página a GitHub Pages y compartirla como enlace.</p>
+    </main>
+  </div>
+
+  <script>
+    // Viernes 29 de mayo de 2026 a las 7:00 AM (hora local del dispositivo)
+    const unlockDate = new Date(2026, 4, 29, 7, 0, 0);
+
+    const gate = document.getElementById('gate');
+    const mainExperience = document.getElementById('mainExperience');
+    const openNow = document.getElementById('openNow');
+    const gateNote = document.getElementById('gateNote');
+    const targetDateLabel = document.getElementById('targetDateLabel');
+    const daysEl = document.getElementById('days');
+    const hoursEl = document.getElementById('hours');
+    const minutesEl = document.getElementById('minutes');
+    const secondsEl = document.getElementById('seconds');
+
+    const cake = document.getElementById('cake');
+    const intro = document.getElementById('intro');
+    const content = document.getElementById('content');
+    const flash = document.getElementById('flash');
+    const boomSound = document.getElementById('boomSound');
+    const bgMusic = document.getElementById('bgMusic');
+    const musicBtn = document.getElementById('musicBtn');
+    const countdownOverlay = document.getElementById('countdownOverlay');
+    const countdownNumber = document.getElementById('countdownNumber');
+    const specialOverlay = document.getElementById('specialOverlay');
+    const specialTitle = document.getElementById('specialTitle');
+    const specialSub = document.getElementById('specialSub');
+
+    let musicPlaying = false;
+    let experienceStarted = false;
+
+    const formatter = new Intl.DateTimeFormat('es-MX', {
+      weekday: 'long', year: 'numeric', month: 'long', day: 'numeric',
+      hour: '2-digit', minute: '2-digit'
+    });
+    targetDateLabel.textContent = 'Se abre el ' + formatter.format(unlockDate);
+
+    function pad(n) { return String(n).padStart(2, '0'); }
+
+    function updateGateCountdown() {
+      const now = new Date();
+      const diff = unlockDate - now;
+
+      if (diff <= 0) {
+        daysEl.textContent = '00';
+        hoursEl.textContent = '00';
+        minutesEl.textContent = '00';
+        secondsEl.textContent = '00';
+        gateNote.textContent = '¡Ya llegó la hora! La sorpresa ya puede abrirse 💖';
+        openNow.style.display = 'block';
+        return true;
+      }
+
+      const totalSeconds = Math.floor(diff / 1000);
+      const days = Math.floor(totalSeconds / (60 * 60 * 24));
+      const hours = Math.floor((totalSeconds % (60 * 60 * 24)) / 3600);
+      const minutes = Math.floor((totalSeconds % 3600) / 60);
+      const seconds = totalSeconds % 60;
+
+      daysEl.textContent = pad(days);
+      hoursEl.textContent = pad(hours);
+      minutesEl.textContent = pad(minutes);
+      secondsEl.textContent = pad(seconds);
+      return false;
+    }
+
+    function openSurprise() {
+      gate.style.display = 'none';
+      mainExperience.style.display = 'block';
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    const unlockedAlready = updateGateCountdown();
+    if (unlockedAlready) openNow.style.display = 'block';
+    setInterval(updateGateCountdown, 1000);
+
+    musicBtn.addEventListener('click', async () => {
+      await toggleMusic();
+    });
+
+    async function toggleMusic() {
+      try {
+        if (!musicPlaying) {
+          bgMusic.volume = 0.32;
+          await bgMusic.play();
+          musicPlaying = true;
+          musicBtn.textContent = '🔇 Pausar música';
+        } else {
+          bgMusic.pause();
+          musicPlaying = false;
+          musicBtn.textContent = '🎵 Activar música';
+        }
+      } catch (error) {
+        console.log('No se pudo reproducir la música todavía:', error);
+      }
+    }
+
+    cake.addEventListener('click', async () => {
+      if (experienceStarted) return;
+      experienceStarted = true;
+
+      if (!musicPlaying) {
+        try {
+          bgMusic.volume = 0.32;
+          await bgMusic.play();
+          musicPlaying = true;
+          musicBtn.textContent = '🔇 Pausar música';
+        } catch (e) {
+          console.log('La música no pudo reproducirse automáticamente.');
+        }
+      }
+
+      await runCountdown();
+      await playSpecialMoment();
+      explodeCake();
+    });
+
+    async function runCountdown() {
+      countdownOverlay.style.display = 'flex';
+      const steps = ['3', '2', '1', 'WOW!'];
+      for (let i = 0; i < steps.length; i++) {
+        countdownNumber.textContent = steps[i];
+        countdownNumber.style.animation = 'none';
+        countdownNumber.offsetHeight;
+        countdownNumber.style.animation = 'countdownPop 0.75s ease forwards';
+        await wait(700);
+      }
+      countdownOverlay.style.display = 'none';
+    }
+
+    async function playSpecialMoment() {
+      specialOverlay.style.display = 'flex';
+      specialTitle.style.animation = 'titleReveal 0.9s ease forwards';
+      setTimeout(() => {
+        specialSub.style.animation = 'subReveal 0.8s ease forwards';
+      }, 280);
+
+      createRoseShower(220, true);
+      createGoldenSparkles(150);
+      createHeartBloom(80);
+      await wait(1900);
+      specialOverlay.style.display = 'none';
+      specialTitle.style.animation = 'none';
+      specialSub.style.animation = 'none';
+      specialTitle.style.opacity = '0';
+      specialSub.style.opacity = '0';
+    }
+
+    async function explodeCake() {
+      try {
+        boomSound.currentTime = 0;
+        boomSound.volume = 0.8;
+        await boomSound.play();
+      } catch (e) {
+        console.log('No se pudo reproducir el sonido.');
+      }
+
+      cake.style.transition = 'all 0.65s ease';
+      cake.style.transform = 'scale(2.8) rotate(18deg)';
+      cake.style.opacity = '0';
+
+      createFlash();
+      createPetalExplosion();
+      createRoseShower(160, false);
+      createFallingFlowers();
+      createGoldenSparkles(100);
+
+      setTimeout(() => {
+        intro.style.opacity = '0';
+        setTimeout(() => {
+          intro.style.display = 'none';
+          content.style.display = 'block';
+          setTimeout(() => {
+            content.style.opacity = '1';
+            content.style.transform = 'translateY(0) scale(1)';
+          }, 50);
+        }, 1100);
+      }, 900);
+    }
+
+    function createFlash() {
+      flash.animate([
+        { opacity: 0 },
+        { opacity: 0.92, offset: 0.2 },
+        { opacity: 0.12, offset: 0.6 },
+        { opacity: 0 }
+      ], { duration: 650, easing: 'ease-out' });
+    }
+
+    function createPetalExplosion() {
+      const particles = ['🌹', '🌸', '✨', '💖', '🌷'];
+      for (let i = 0; i < 150; i++) {
+        const particle = document.createElement('div');
+        particle.textContent = particles[Math.floor(Math.random() * particles.length)];
+        particle.style.position = 'fixed';
+        particle.style.left = '50%';
+        particle.style.top = '48%';
+        particle.style.fontSize = (Math.random() * 18 + 16) + 'px';
+        particle.style.zIndex = '2600';
+        particle.style.pointerEvents = 'none';
+        document.body.appendChild(particle);
+
+        const angle = Math.random() * Math.PI * 2;
+        const distance = Math.random() * 460 + 130;
+        const x = Math.cos(angle) * distance;
+        const y = Math.sin(angle) * distance;
+
+        particle.animate([
+          { transform: 'translate(0, 0) scale(1)', opacity: 1 },
+          { transform: `translate(${x}px, ${y}px) scale(0.22) rotate(${Math.random() * 360}deg)`, opacity: 0 }
+        ], {
+          duration: 1100 + Math.random() * 900,
+          easing: 'cubic-bezier(0.2, 0.8, 0.2, 1)'
+        });
+
+        setTimeout(() => particle.remove(), 2500);
+      }
+    }
+
+    function createRoseShower(amount, intense) {
+      const flowers = ['🌹', '🌸', '💖', '✨', '💐'];
+      for (let i = 0; i < amount; i++) {
+        const flower = document.createElement('div');
+        flower.textContent = flowers[Math.floor(Math.random() * flowers.length)];
+        flower.style.position = 'fixed';
+        flower.style.fontSize = (Math.random() * 20 + (intense ? 18 : 16)) + 'px';
+        flower.style.left = Math.random() * 100 + 'vw';
+        flower.style.top = (-Math.random() * 120) + 'px';
+        flower.style.zIndex = intense ? '3650' : '2400';
+        flower.style.pointerEvents = 'none';
+        flower.style.userSelect = 'none';
+        document.body.appendChild(flower);
+
+        const rotate = Math.random() * 920 - 460;
+        const drift = Math.random() * 180 - 90;
+        const duration = (intense ? 1900 : 2200) + Math.random() * 1800;
+
+        flower.animate([
+          { transform: 'translate(0, 0) rotate(0deg)', opacity: 0 },
+          { transform: 'translate(0, 40px) rotate(18deg)', opacity: 1, offset: 0.08 },
+          { transform: `translate(${drift}px, ${window.innerHeight + 180}px) rotate(${rotate}deg)`, opacity: 0 }
+        ], {
+          duration,
+          easing: 'linear'
+        });
+
+        setTimeout(() => flower.remove(), duration + 200);
+      }
+    }
+
+    function createGoldenSparkles(amount) {
+      for (let i = 0; i < amount; i++) {
+        const s = document.createElement('div');
+        s.textContent = '✨';
+        s.style.position = 'fixed';
+        s.style.left = Math.random() * 100 + 'vw';
+        s.style.top = Math.random() * 100 + 'vh';
+        s.style.fontSize = (Math.random() * 14 + 10) + 'px';
+        s.style.zIndex = '3660';
+        s.style.pointerEvents = 'none';
+        document.body.appendChild(s);
+        const dx = (Math.random() * 120 - 60);
+        const dy = (Math.random() * 120 - 60);
+        const dur = 900 + Math.random() * 1200;
+        s.animate([
+          { transform: 'translate(0,0) scale(0.2)', opacity: 0 },
+          { transform: 'translate(0,0) scale(1)', opacity: 1, offset: 0.22 },
+          { transform: `translate(${dx}px, ${dy}px) scale(0.3)`, opacity: 0 }
+        ], { duration: dur, easing: 'ease-out' });
+        setTimeout(() => s.remove(), dur + 60);
+      }
+    }
+
+    function createHeartBloom(amount) {
+      for (let i = 0; i < amount; i++) {
+        const h = document.createElement('div');
+        h.textContent = '💖';
+        h.style.position = 'fixed';
+        h.style.left = '50%';
+        h.style.top = '50%';
+        h.style.fontSize = (Math.random() * 14 + 14) + 'px';
+        h.style.zIndex = '3665';
+        h.style.pointerEvents = 'none';
+        document.body.appendChild(h);
+
+        const angle = Math.random() * Math.PI * 2;
+        const distance = Math.random() * 380 + 80;
+        const x = Math.cos(angle) * distance;
+        const y = Math.sin(angle) * distance;
+        const dur = 1000 + Math.random() * 900;
+
+        h.animate([
+          { transform: 'translate(0,0) scale(0.4)', opacity: 0 },
+          { transform: 'translate(0,0) scale(1)', opacity: 1, offset: 0.14 },
+          { transform: `translate(${x}px, ${y}px) scale(0.1)`, opacity: 0 }
+        ], { duration: dur, easing: 'ease-out' });
+
+        setTimeout(() => h.remove(), dur + 60);
+      }
+    }
+
+    function createFallingFlowers() {
+      createRoseShower(42, false);
+    }
+
+    function replayExperience() {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+      setTimeout(() => location.reload(), 300);
+    }
+
+    function shareWhatsApp() {
+      const currentUrl = window.location.href;
+      const isWeb = currentUrl.startsWith('http://') || currentUrl.startsWith('https://');
+      const text = isWeb
+        ? `🌹 Mira esta sorpresa bonita de cumpleaños para Jaqueline ✨💖 ${currentUrl}`
+        : `🌹 Te quiero compartir una sorpresa bonita de cumpleaños para Jaqueline ✨💖 (Súbela a GitHub Pages para compartirla como enlace)`;
+      const waUrl = `https://wa.me/?text=${encodeURIComponent(text)}`;
+      window.open(waUrl, '_blank');
+    }
+
+    function wait(ms) { return new Promise(resolve => setTimeout(resolve, ms)); }
+  </script>
+</body>
+</html>
